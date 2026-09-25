@@ -1,9 +1,31 @@
 type = "card"
+layout = "list"
 title = "学术服务"
-description = "专业服务与社区参与。"
+hide_title = true
 
 [[items]]
-title = "审稿人"
-subtitle = "某期刊"
-date = "2024"
-content = "参与审阅论文。"
+section = "协会组织"
+subtitle = "气溶胶科学与工程中心 (CASE)"
+title = "青年委员"
+date = "进行中"
+
+[[items]]
+section = "科研项目"
+title = "室内致敏原的演变"
+subtitle = "美国国家环境卫生科学院 (NIEHS)"
+date = "在研"
+content = "经费：$427,600；项目编号：1R21ES037893-01A1；承担工作：室内尘螨的化学演变表征"
+
+[[items]]
+section = "教学助理"
+title = "EECE 2020 数值计算模型"
+subtitle = "本科生课程，71名学生"
+date = "2026春季学期"
+content = "课程教师：*Jenna Ditto 教授*"
+
+[[items]]
+section = "教学助理"
+title = "EECE 5040 气溶胶科学与技术"
+subtitle = "研究生核心课程，11名学生"
+date = "2025秋季学期"
+content = "课程教师：*Jian Wang 教授*"

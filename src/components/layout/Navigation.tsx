@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -35,20 +35,17 @@ export default function Navigation({
   const locale = useLocaleStore((state) => state.locale);
   const [scrolled, setScrolled] = useState(false);
   const [activeHash, setActiveHash] = useState('');
-  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
   const messages = useMessages();
-  const navContainerRef = useRef<HTMLDivElement>(null);
-  const [indicatorStyle, setIndicatorStyle] = useState<{
-    left: number;
-    width: number;
-    top: number;
-    height: number;
-  } | null>(null);
   const resolvedLocale = i18n.enabled ? locale : i18n.defaultLocale;
 
   const effectiveItems = useMemo(() => {
     return itemsByLocale?.[resolvedLocale] || itemsByLocale?.[i18n.defaultLocale] || items;
   }, [i18n.defaultLocale, items, itemsByLocale, resolvedLocale]);
+
+  const visibleItems = useMemo(
+    () => effectiveItems.filter((item) => !item.hide_from_nav),
+    [effectiveItems]
+  );
 
   const effectiveSiteTitle = useMemo(() => {
     return siteTitleByLocale?.[resolvedLocale] || siteTitleByLocale?.[i18n.defaultLocale] || siteTitle;
@@ -83,7 +80,7 @@ export default function Navigation({
           }
         });
 
-        const firstVisible = effectiveItems.find(
+        const firstVisible = visibleItems.find(
           (item) => item.type === 'page' && visibleSections.current.has(item.target)
         );
         if (firstVisible) {
@@ -99,7 +96,7 @@ export default function Navigation({
 
       const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-      effectiveItems.forEach((item) => {
+      visibleItems.forEach((item) => {
         if (item.type === 'page') {
           const element = document.getElementById(item.target);
           if (element) observer.observe(element);
@@ -111,7 +108,7 @@ export default function Navigation({
         observer.disconnect();
       };
     }
-  }, [enableOnePageMode, effectiveItems]);
+  }, [enableOnePageMode, visibleItems]);
 
   const isDesktopItemActive = (item: SiteConfig['navigation'][number]) =>
     enableOnePageMode
@@ -123,40 +120,6 @@ export default function Navigation({
   const getDesktopItemHref = (item: SiteConfig['navigation'][number]) =>
     enableOnePageMode ? `/#${item.target}` : item.href;
 
-  const activeItem = effectiveItems.find((item) => isDesktopItemActive(item)) ?? null;
-  const activeHref = activeItem ? getDesktopItemHref(activeItem) : null;
-  const indicatorHref = hoveredHref ?? activeHref;
-
-  const measureIndicator = useCallback(() => {
-    const container = navContainerRef.current;
-    if (!container || !indicatorHref) {
-      setIndicatorStyle(null);
-      return;
-    }
-    const el = container.querySelector<HTMLElement>(
-      `[data-nav-href="${CSS.escape(indicatorHref)}"]`
-    );
-    if (!el) {
-      setIndicatorStyle(null);
-      return;
-    }
-    setIndicatorStyle({
-      left: el.offsetLeft,
-      width: el.offsetWidth,
-      top: el.offsetTop,
-      height: el.offsetHeight,
-    });
-  }, [indicatorHref]);
-
-  useEffect(() => {
-    measureIndicator();
-  }, [measureIndicator]);
-
-  useEffect(() => {
-    window.addEventListener('resize', measureIndicator);
-    return () => window.removeEventListener('resize', measureIndicator);
-  }, [measureIndicator]);
-
   return (
     <Disclosure as="nav" className="fixed top-0 left-0 right-0 z-50">
       {({ open }) => (
@@ -166,14 +129,14 @@ export default function Navigation({
             animate={{ y: 0 }}
             transition={{ duration: 0.6 }}
             className={cn(
-              'transition-all duration-300 ease-out',
+              'bg-transparent backdrop-blur-xl transition-all duration-300 ease-out',
               scrolled
-                ? 'bg-background/80 backdrop-blur-xl border-b border-neutral-200/50 shadow-lg'
-                : 'bg-transparent'
+                ? 'shadow-lg'
+                : ''
             )}
           >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center h-16 lg:h-20">
+            <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-[3.52rem] lg:h-[4.4rem]">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -181,7 +144,7 @@ export default function Navigation({
                 >
                   <Link
                     href="/"
-                    className="text-xl lg:text-2xl font-serif font-semibold text-primary hover:text-accent transition-colors duration-200"
+                    className="text-xl lg:text-2xl font-serif font-semibold text-ui-heading hover:text-ui-accent transition-colors duration-200"
                   >
                     {effectiveSiteTitle}
                   </Link>
@@ -190,33 +153,9 @@ export default function Navigation({
                 <div className="hidden lg:block">
                   <div className="ml-10 flex items-center space-x-3">
                     <div
-                      ref={navContainerRef}
-                      className="relative flex items-baseline space-x-1"
-                      onMouseLeave={() => setHoveredHref(null)}
+                      className="relative flex items-center space-x-2"
                     >
-                      {indicatorStyle && (
-                        <motion.div
-                          className={cn(
-                            'absolute rounded-lg pointer-events-none',
-                            hoveredHref && hoveredHref !== activeHref
-                              ? 'bg-accent/[0.07]'
-                              : 'bg-accent/10'
-                          )}
-                          initial={false}
-                          animate={{
-                            left: indicatorStyle.left,
-                            width: indicatorStyle.width,
-                            top: indicatorStyle.top,
-                            height: indicatorStyle.height,
-                          }}
-                          transition={{
-                            type: 'spring',
-                            stiffness: 400,
-                            damping: 28,
-                          }}
-                        />
-                      )}
-                      {effectiveItems.map((item) => {
+                      {visibleItems.map((item) => {
                         const isActive = isDesktopItemActive(item);
                         const href = getDesktopItemHref(item);
 
@@ -227,14 +166,12 @@ export default function Navigation({
                             data-nav-href={href}
                             prefetch={true}
                             onClick={() => enableOnePageMode && setActiveHash(`#${item.target}`)}
-                            onMouseEnter={() => setHoveredHref(href)}
                             className={cn(
-                              'relative px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150',
+                              'relative px-4 py-2.5 text-base font-semibold rounded-xl transition-all duration-200',
+                              'after:absolute after:left-4 after:right-4 after:bottom-1.5 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-accent after:transition-transform after:duration-200',
                               isActive
-                                ? 'text-primary'
-                                : hoveredHref === href
-                                  ? 'text-primary'
-                                  : 'text-neutral-600'
+                                ? 'text-ui-accent'
+                                : 'text-ui-muted hover:text-ui-heading hover:after:scale-x-100'
                             )}
                           >
                             {item.title}
@@ -250,7 +187,7 @@ export default function Navigation({
                 <div className="lg:hidden flex items-center space-x-2">
                   <LanguageToggle i18n={i18n} />
                   <ThemeToggle />
-                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-neutral-600 hover:text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent transition-colors duration-200">
+                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-ui-muted hover:text-ui-heading hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent transition-colors duration-200">
                     <span className="sr-only">{messages.navigation.openMainMenu}</span>
                     <motion.div
                       animate={{ rotate: open ? 180 : 0 }}
@@ -279,7 +216,7 @@ export default function Navigation({
                   className="lg:hidden bg-background/95 backdrop-blur-xl border-b border-neutral-200/50 shadow-lg"
                 >
                   <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    {effectiveItems.map((item, index) => {
+                    {visibleItems.map((item, index) => {
                       const isActive = enableOnePageMode
                         ? (item.href === '/' ? pathname === '/' && !activeHash : activeHash === `#${item.target}`)
                         : (item.href === '/'
@@ -303,10 +240,11 @@ export default function Navigation({
                             prefetch={true}
                             onClick={() => enableOnePageMode && setActiveHash(item.href === '/' ? '' : `#${item.target}`)}
                             className={cn(
-                              'block px-3 py-2 rounded-md text-base font-medium transition-all duration-200',
+                              'relative block px-3 py-2 rounded-md text-base font-semibold transition-all duration-200',
+                              'after:absolute after:left-3 after:right-3 after:bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-accent after:transition-transform after:duration-200',
                               isActive
-                                ? 'text-primary bg-accent/10 border-l-4 border-accent'
-                                : 'text-neutral-600 hover:text-primary hover:bg-neutral-50'
+                                ? 'text-ui-accent'
+                                : 'text-ui-muted hover:text-ui-heading hover:after:scale-x-100'
                             )}
                           >
                             {item.title}

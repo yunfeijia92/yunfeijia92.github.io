@@ -7,28 +7,33 @@ import News, { NewsItem } from '@/components/home/News';
 import PublicationsList from '@/components/publications/PublicationsList';
 import TextPage from '@/components/pages/TextPage';
 import CardPage from '@/components/pages/CardPage';
+import PdfPage from '@/components/pages/PdfPage';
 import type { SiteConfig } from '@/lib/config';
 import { Publication } from '@/types/publication';
-import { CardPageConfig, PublicationPageConfig, TextPageConfig } from '@/types/page';
+import { CardPageConfig, PdfPageConfig, PublicationPageConfig, TextPageConfig } from '@/types/page';
 import { useLocaleStore } from '@/lib/stores/localeStore';
 
 interface SectionConfig {
   id: string;
-  type: 'markdown' | 'publications' | 'list';
+  type: 'markdown' | 'publications' | 'list' | 'awards';
   title?: string;
+  description?: string;
   source?: string;
   filter?: string;
   limit?: number;
+  keys?: string[];
   content?: string;
   publications?: Publication[];
   items?: NewsItem[];
+  cardConfig?: CardPageConfig;
 }
 
 type PageData =
   | { type: 'about'; id: string; sections: SectionConfig[] }
   | { type: 'publication'; id: string; config: PublicationPageConfig; publications: Publication[] }
   | { type: 'text'; id: string; config: TextPageConfig; content: string }
-  | { type: 'card'; id: string; config: CardPageConfig };
+  | { type: 'card'; id: string; config: CardPageConfig }
+  | { type: 'pdf'; id: string; config: PdfPageConfig };
 
 export interface HomePageLocaleData {
   author: SiteConfig['author'];
@@ -54,9 +59,9 @@ export default function HomePageClient({ dataByLocale, defaultLocale }: HomePage
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-background min-h-screen">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-1">
+    <div className="max-w-[76rem] mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2.5fr] gap-12">
+        <div>
           <Profile
             author={data.author}
             social={data.social}
@@ -65,7 +70,7 @@ export default function HomePageClient({ dataByLocale, defaultLocale }: HomePage
           />
         </div>
 
-        <div className="lg:col-span-2 space-y-8">
+        <div className="space-y-8">
           {data.pagesToShow.map((page) => (
             <section key={page.id} id={page.id} className="scroll-mt-24 space-y-8">
               {page.type === 'about' && page.sections.map((section: SectionConfig) => {
@@ -76,6 +81,7 @@ export default function HomePageClient({ dataByLocale, defaultLocale }: HomePage
                         key={section.id}
                         content={section.content || ''}
                         title={section.title}
+                        showTitle={!(page.id === 'about' && section.id === 'about')}
                       />
                     );
                   case 'publications':
@@ -95,6 +101,16 @@ export default function HomePageClient({ dataByLocale, defaultLocale }: HomePage
                         title={section.title}
                       />
                     );
+                  case 'awards':
+                    return section.cardConfig ? (
+                      <CardPage
+                        key={section.id}
+                        config={section.cardConfig}
+                        embedded={true}
+                        compact={true}
+                        viewAllHref={data.enableOnePageMode ? "/#awards" : "/awards"}
+                      />
+                    ) : null;
                   default:
                     return null;
                 }
@@ -115,6 +131,12 @@ export default function HomePageClient({ dataByLocale, defaultLocale }: HomePage
               )}
               {page.type === 'card' && (
                 <CardPage
+                  config={page.config}
+                  embedded={true}
+                />
+              )}
+              {page.type === 'pdf' && (
+                <PdfPage
                   config={page.config}
                   embedded={true}
                 />

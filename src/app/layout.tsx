@@ -132,15 +132,6 @@ export default function RootLayout({
     <html lang={runtimeI18n.defaultLocale} className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="icon" href={config.site.favicon} type="image/svg+xml" />
-        <link rel="dns-prefetch" href="https://jialeliu.com" />
-        <link rel="preconnect" href="https://jialeliu.com" crossOrigin="" />
-        <link
-          rel="preload"
-          as="font"
-          type="font/woff2"
-          href="https://jialeliu.com/fonts/georgiab.woff2"
-          crossOrigin=""
-        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -178,13 +169,14 @@ export default function RootLayout({
               itemsByLocale={navigationByLocale}
               siteTitleByLocale={siteTitleByLocale}
             />
-            <main className="min-h-screen pt-16 lg:pt-20">
+            <main className="min-h-screen pt-[3.52rem] lg:pt-[4.4rem]">
               {children}
             </main>
             <Footer
               lastUpdated={config.site.last_updated}
               lastUpdatedByLocale={lastUpdatedByLocale}
               defaultLocale={runtimeI18n.defaultLocale}
+              authorName={config.author.name}
             />
           </LocaleProvider>
         </ThemeProvider>

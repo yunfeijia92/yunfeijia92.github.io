@@ -36,15 +36,39 @@ export interface LocaleMessages {
     searchPlaceholder: string;
     filters: string;
     year: string;
+    journal: string;
+    jcrQuartile: string;
+    impactFactor: string;
     type: string;
     noResults: string;
     abstract: string;
     bibtex: string;
     code: string;
+    sort: string;
+    sortByYear: string;
+    sortByAuthorship: string;
+    resultCount: {
+      showing: string;
+      of: string;
+      publicationSingular: string;
+      publicationPlural: string;
+    };
+    statCards: {
+      allPublications: string;
+      firstAuthor: string;
+      correspondingAuthor: string;
+      coAuthor: string;
+      citations: string;
+      hIndex: string;
+    };
+    authorshipFilters: {
+      firstAuthor: string;
+      correspondingAuthor: string;
+      coAuthor: string;
+    };
   };
   footer: {
     lastUpdated: string;
-    builtWithPrism: string;
   };
 }
 
@@ -79,22 +103,46 @@ const en: LocaleMessages = {
   home: {
     about: 'About',
     news: 'News',
-    selectedPublications: 'Selected Publications',
+    selectedPublications: 'Selected publications',
     viewAll: 'View All',
   },
   publications: {
     searchPlaceholder: 'Search publications...',
     filters: 'Filters',
     year: 'Year',
-    type: 'Type',
+    journal: 'Journal',
+    jcrQuartile: 'JCR Quartile',
+    impactFactor: 'Impact Factor',
+    type: 'Author',
     noResults: 'No publications found matching your criteria.',
     abstract: 'Abstract',
     bibtex: 'BibTeX',
     code: 'Code',
+    sort: 'Sort',
+    sortByYear: 'Year',
+    sortByAuthorship: 'Author',
+    resultCount: {
+      showing: 'Showing',
+      of: 'of',
+      publicationSingular: 'publication',
+      publicationPlural: 'publications',
+    },
+    statCards: {
+      allPublications: 'Total',
+      firstAuthor: 'First author',
+      correspondingAuthor: 'Corr. author',
+      coAuthor: 'Co-author',
+      citations: 'Citations',
+      hIndex: 'h-index',
+    },
+    authorshipFilters: {
+      firstAuthor: 'First author',
+      correspondingAuthor: 'Corresponding',
+      coAuthor: 'Co-author',
+    },
   },
   footer: {
     lastUpdated: 'Last updated',
-    builtWithPrism: 'Built with PRISM',
   },
 };
 
@@ -121,7 +169,7 @@ const zh: LocaleMessages = {
     googleMap: '谷歌地图',
     send: '发送',
     sendEmail: '发送邮件',
-    researchInterests: '研究兴趣',
+    researchInterests: '研究领域',
     like: '点赞',
     liked: '已点赞',
     thanks: '感谢支持！',
@@ -136,15 +184,39 @@ const zh: LocaleMessages = {
     searchPlaceholder: '搜索论文...',
     filters: '筛选',
     year: '年份',
-    type: '类型',
+    journal: '期刊',
+    jcrQuartile: 'JCR 分区',
+    impactFactor: '影响因子',
+    type: '作者',
     noResults: '没有找到符合条件的论文。',
     abstract: '摘要',
     bibtex: 'BibTeX',
     code: '代码',
+    sort: '排序',
+    sortByYear: '年份',
+    sortByAuthorship: '作者',
+    resultCount: {
+      showing: '当前显示',
+      of: '/',
+      publicationSingular: '篇论文',
+      publicationPlural: '篇论文',
+    },
+    statCards: {
+      allPublications: '总数',
+      firstAuthor: '第一作者',
+      correspondingAuthor: '通讯作者',
+      coAuthor: '合作者',
+      citations: '引用',
+      hIndex: 'h 指数',
+    },
+    authorshipFilters: {
+      firstAuthor: '一作',
+      correspondingAuthor: '通讯',
+      coAuthor: '合作者',
+    },
   },
   footer: {
     lastUpdated: '最近更新',
-    builtWithPrism: '由 PRISM 构建',
   },
 };
 

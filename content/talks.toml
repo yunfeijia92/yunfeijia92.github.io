@@ -1,0 +1,9 @@
+type = "card"
+layout = "list"
+title = "Invited Talks"
+
+[[items]]
+title = "aaa"
+subtitle = "aaar2026"
+date = "2026"
+content = "aaa"

@@ -3,31 +3,58 @@ import { getMarkdownContent, getBibtexContent, getTomlContent, getPageConfig } f
 import { parseBibTeX } from '@/lib/bibtexParser';
 import HomePageClient, { type HomePageLocaleData } from '@/components/home/HomePageClient';
 import { Publication } from '@/types/publication';
-import { BasePageConfig, PublicationPageConfig, TextPageConfig, CardPageConfig } from '@/types/page';
+import { BasePageConfig, PublicationPageConfig, TextPageConfig, CardPageConfig, PdfPageConfig } from '@/types/page';
 import { getRuntimeI18nConfig } from '@/lib/i18n/config';
 
 interface SectionConfig {
   id: string;
-  type: 'markdown' | 'publications' | 'list';
+  type: 'markdown' | 'publications' | 'list' | 'awards';
   title?: string;
+  description?: string;
   source?: string;
   filter?: string;
   limit?: number;
+  keys?: string[];
   content?: string;
   publications?: Publication[];
   items?: NewsItem[];
+  cardConfig?: CardPageConfig;
 }
 
 interface NewsItem {
   date: string;
+  tag?: string;
   content: string;
+  links?: {
+    label: string;
+    url: string;
+  }[];
 }
 
 type PageData =
   | { type: 'about'; id: string; sections: SectionConfig[] }
   | { type: 'publication'; id: string; config: PublicationPageConfig; publications: Publication[] }
   | { type: 'text'; id: string; config: TextPageConfig; content: string }
-  | { type: 'card'; id: string; config: CardPageConfig };
+  | { type: 'card'; id: string; config: CardPageConfig }
+  | { type: 'pdf'; id: string; config: PdfPageConfig };
+
+function getDefaultSelectedPublications(publications: Publication[], limit: number): Publication[] {
+  const explicitlySelected = publications.filter((publication) => publication.selected);
+
+  if (explicitlySelected.length > 0) {
+    return explicitlySelected.slice(0, limit);
+  }
+
+  return publications
+    .filter((publication) => publication.authors[0]?.isHighlighted && typeof publication.impactFactor === 'number')
+    .sort((a, b) => {
+      const impactDiff = (b.impactFactor || 0) - (a.impactFactor || 0);
+      if (impactDiff !== 0) return impactDiff;
+      if (b.year !== a.year) return b.year - a.year;
+      return a.title.localeCompare(b.title);
+    })
+    .slice(0, limit);
+}
 
 function processSections(sections: SectionConfig[], locale?: string): SectionConfig[] {
   return sections.map((section: SectionConfig) => {
@@ -40,12 +67,13 @@ function processSections(sections: SectionConfig[], locale?: string): SectionCon
       case 'publications': {
         const bibtex = getBibtexContent('publications.bib', locale);
         const allPubs = parseBibTeX(bibtex, locale);
+        const limit = section.limit || 5;
         const filteredPubs = section.filter === 'selected'
-          ? allPubs.filter((p) => p.selected)
-          : allPubs;
+          ? getDefaultSelectedPublications(allPubs, limit)
+          : allPubs.slice(0, limit);
         return {
           ...section,
-          publications: filteredPubs.slice(0, section.limit || 5),
+          publications: filteredPubs,
         };
       }
       case 'list': {
@@ -53,6 +81,23 @@ function processSections(sections: SectionConfig[], locale?: string): SectionCon
         return {
           ...section,
           items: newsData?.news || [],
+        };
+      }
+      case 'awards': {
+        const awardsConfig = section.source ? getTomlContent<CardPageConfig>(section.source, locale) : null;
+        const selectedKeys = section.keys || [];
+        const selectedItems = selectedKeys
+          .map((key) => awardsConfig?.items.find((item) => item.id === key))
+          .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+        return {
+          ...section,
+          cardConfig: awardsConfig ? {
+            ...awardsConfig,
+            title: section.title || awardsConfig.title,
+            description: section.description,
+            items: selectedItems,
+          } : undefined,
         };
       }
       default:
@@ -72,7 +117,7 @@ function loadPageDataForLocale(locale: string | undefined): HomePageLocaleData {
 
   if (enableOnePageMode) {
     pagesToShow = localeConfig.navigation
-      .filter((item) => item.type === 'page')
+      .filter((item) => item.type === 'page' && !item.hide_from_nav)
       .map((item) => {
         const rawConfig = getPageConfig(item.target, locale);
         if (!rawConfig) return null;
@@ -113,6 +158,14 @@ function loadPageDataForLocale(locale: string | undefined): HomePageLocaleData {
             type: 'card',
             id: item.target,
             config: pageConfig as CardPageConfig,
+          } as PageData;
+        }
+
+        if (pageConfig.type === 'pdf') {
+          return {
+            type: 'pdf',
+            id: item.target,
+            config: pageConfig as PdfPageConfig,
           } as PageData;
         }
 

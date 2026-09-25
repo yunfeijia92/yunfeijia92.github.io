@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.venv
 /.pnp
 .pnp.*
 .yarn/*
@@ -13,9 +14,14 @@
 # testing
 /coverage
 
+# python
+__pycache__/
+*.py[cod]
+
 # next.js
 /.next/
 /out/
+/google-scholar-stats/
 
 # production
 /build

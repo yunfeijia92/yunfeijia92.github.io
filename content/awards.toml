@@ -1,27 +1,14 @@
 type = "card"
-title = "Awards"
-description = "Honors and awards I have received."
+title = "Awards & Honors"
+description = "Selected awards, honors, and competition recognitions"
 
 [[items]]
-title = "Example Award"
-subtitle = "Organization"
-date = "2025"
-content = "Description of the award."
+id = "best-oral-presentation-nomination"
+title = "Best Presentation Nomination"
+subtitle = "AAAR 2026"
+date = "2026-10"
+content = "Oral presentation titled \"AAA\""
+tags = ["Research Recognition"]
+image = "/awards/AAA.jpeg"
 
-[[items]]
-title = "Example Award"
-subtitle = "Organization"
-date = "2024"
-content = "Description of the award."
 
-[[items]]
-title = "Example Award"
-subtitle = "Organization"
-date = "2023"
-content = "Description of the award."
-
-[[items]]
-title = "Example Award"
-subtitle = "Organization"
-date = "2022"
-content = "Description of the award."

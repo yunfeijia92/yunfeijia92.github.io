@@ -3,18 +3,28 @@
 import PublicationsList from '@/components/publications/PublicationsList';
 import TextPage from '@/components/pages/TextPage';
 import CardPage from '@/components/pages/CardPage';
+import PdfPage from '@/components/pages/PdfPage';
 import { Publication } from '@/types/publication';
 import {
   PublicationPageConfig,
   TextPageConfig,
   CardPageConfig,
+  PdfPageConfig,
+  ScholarMetrics,
 } from '@/types/page';
 import { useLocaleStore } from '@/lib/stores/localeStore';
 
 export type DynamicPageLocaleData =
-  | { type: 'publication'; config: PublicationPageConfig; publications: Publication[] }
+  | {
+    type: 'publication';
+    config: PublicationPageConfig;
+    publications: Publication[];
+    scholarMetrics?: ScholarMetrics | null;
+    googleScholarUrl?: string;
+  }
   | { type: 'text'; config: TextPageConfig; content: string }
-  | { type: 'card'; config: CardPageConfig };
+  | { type: 'card'; config: CardPageConfig }
+  | { type: 'pdf'; config: PdfPageConfig };
 
 interface DynamicPageClientProps {
   dataByLocale: Record<string, DynamicPageLocaleData>;
@@ -31,15 +41,23 @@ export default function DynamicPageClient({ dataByLocale, defaultLocale }: Dynam
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[60rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {pageData.type === 'publication' && (
-        <PublicationsList config={pageData.config} publications={pageData.publications} />
+        <PublicationsList
+          config={pageData.config}
+          publications={pageData.publications}
+          scholarMetrics={pageData.scholarMetrics}
+          googleScholarUrl={pageData.googleScholarUrl}
+        />
       )}
       {pageData.type === 'text' && (
         <TextPage config={pageData.config} content={pageData.content} />
       )}
       {pageData.type === 'card' && (
         <CardPage config={pageData.config} />
+      )}
+      {pageData.type === 'pdf' && (
+        <PdfPage config={pageData.config} />
       )}
     </div>
   );

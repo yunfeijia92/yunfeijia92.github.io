@@ -1,9 +1,31 @@
 type = "card"
-title = "Services"
-description = "Professional services and community involvement."
+layout = "list"
+title = "Service"
+hide_title = true
 
 [[items]]
-title = "Reviewer"
-subtitle = "Journal Name"
-date = "2024"
-content = "Reviewed papers for..."
+section = "Professional Service"
+title = "Junior Board Member"
+subtitle = "Center for Aerosol Science and Engineering (CASE), WashU"
+date = "Ongoing"
+
+[[items]]
+section = "Research Projects"
+title = "Air Pollutant Transformation of Indoor Allergens"
+subtitle = "National Institute of Environmental Health Sciences (NIEHS)"
+date = "Ongoing"
+content = "Project # 1R21ES037893-01A1"
+
+[[items]]
+section = "Teaching"
+title = "EECE 2020 Computational Modeling in EECE"
+subtitle = "Undergraduate Course, 71 students"
+date = "Spring 2026"
+content = "Teaching Assistant to *Prof. Jenna Ditto*"
+
+[[items]]
+section = "Teaching"
+title = "EECE 5040 Aerosol Science and Technology"
+subtitle = "Graduate Anchor Course, 11 students"
+date = "Fall 2025"
+content = "Teaching Assistant to *Prof. Jian Wang*"

@@ -36,6 +36,45 @@ const monthMapping: Record<string, number> = {
   dec: 12, december: 12,
 };
 
+function normalizeDateString(value?: string): string | undefined {
+  if (!value) return undefined;
+
+  const cleaned = cleanBibTeXString(value).trim();
+  if (!cleaned) return undefined;
+
+  const isoMatch = cleaned.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
+  if (isoMatch) {
+    const [, year, month, day] = isoMatch;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+
+  const textMatch = cleaned.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if (textMatch) {
+    const [, day, monthName, year] = textMatch;
+    const month = monthMapping[monthName.toLowerCase()];
+    if (month) {
+      return `${year}-${String(month).padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
+  }
+
+  const parsed = Date.parse(cleaned);
+  if (!Number.isNaN(parsed)) {
+    return new Date(parsed).toISOString().slice(0, 10);
+  }
+
+  return undefined;
+}
+
+function sortDateFromYearMonth(year: number, month?: number): string {
+  return `${year}-${String(month || 1).padStart(2, '0')}-01`;
+}
+
+function publicationSortTime(publication: Publication): number {
+  const date = publication.sortDate || sortDateFromYearMonth(publication.year);
+  const parsed = Date.parse(`${date}T00:00:00Z`);
+  return Number.isNaN(parsed) ? publication.year : parsed;
+}
+
 export function parseBibTeX(bibtexContent: string, locale?: string): Publication[] {
   const highlightNames = getHighlightNames(locale);
   const entries = bibtexParse.toJSON(bibtexContent);
@@ -50,6 +89,10 @@ export function parseBibTeX(bibtexContent: string, locale?: string): Publication
     const year = parseInt(tags.year) || new Date().getFullYear();
     const monthStr = tags.month?.toLowerCase() || '';
     const month = monthMapping[monthStr] || (parseInt(monthStr) || undefined);
+    const acceptedDate = normalizeDateString(
+      tags.accepted || tags.accepteddate || tags.accepted_date || tags.accept_date
+    );
+    const sortDate = acceptedDate || sortDateFromYearMonth(year, month);
 
     // Determine type
     const type = typeMapping[entry.entryType.toLowerCase()] || 'journal';
@@ -63,6 +106,13 @@ export function parseBibTeX(bibtexContent: string, locale?: string): Publication
     // Parse preview field (remove braces if present)
     const preview = tags.preview?.replace(/[{}]/g, '');
     const title = parseBibTeXInline(tags.title || 'Untitled');
+    const sci = cleanBibTeXString(tags.sci).trim();
+    const sciif = cleanBibTeXString(tags.sciif).trim();
+    const parsedImpactFactor = parseFloat(sciif);
+    const hasImpactFactor = Number.isFinite(parsedImpactFactor);
+    const quartile = ['Q1', 'Q2', 'Q3', 'Q4'].includes(sci)
+      ? (sci as 'Q1' | 'Q2' | 'Q3' | 'Q4')
+      : undefined;
 
     // Create publication object
     const publication: Publication = {
@@ -72,6 +122,8 @@ export function parseBibTeX(bibtexContent: string, locale?: string): Publication
       authors,
       year,
       month: monthMapping[tags.month?.toLowerCase()] ? String(month) : tags.month,
+      acceptedDate,
+      sortDate,
       type,
       status: 'published',
       tags: keywords,
@@ -91,9 +143,13 @@ export function parseBibTeX(bibtexContent: string, locale?: string): Publication
       description: cleanBibTeXString(tags.description || tags.note),
       selected,
       preview,
+      sci,
+      sciif,
+      impactFactor: hasImpactFactor ? parsedImpactFactor : undefined,
+      quartile,
 
       // Store original BibTeX (excluding custom fields)
-      bibtex: reconstructBibTeX(entry, ['selected', 'preview', 'description', 'keywords', 'code']),
+      bibtex: reconstructBibTeX(entry, ['selected', 'preview', 'description', 'keywords', 'code', 'sci', 'sciif', 'accepted']),
     };
 
     // Clean up undefined fields
@@ -105,19 +161,11 @@ export function parseBibTeX(bibtexContent: string, locale?: string): Publication
 
     return publication;
   }).sort((a: Publication, b: Publication) => {
-    // Sort by year (descending), then by month if available
     if (b.year !== a.year) return b.year - a.year;
 
-    // For month comparison, treat missing months as January (1) to ensure they appear last within the year
-    const monthA = typeof a.month === 'string' ?
-      (monthMapping[a.month.toLowerCase()] || parseInt(a.month) || 1) :
-      (a.month || 1);
-    const monthB = typeof b.month === 'string' ?
-      (monthMapping[b.month.toLowerCase()] || parseInt(b.month) || 1) :
-      (b.month || 1);
-
-    // Sort by month descending (December to January)
-    return monthB - monthA;
+    const dateDiff = publicationSortTime(b) - publicationSortTime(a);
+    if (dateDiff !== 0) return dateDiff;
+    return a.title.localeCompare(b.title);
   });
 }
 
@@ -162,12 +210,20 @@ function buildNameVariants(name: string): Set<string> {
     return variants;
   }
 
-  variants.add(cleaned);
+  const addVariant = (value: string) => {
+    const variant = value.replace(/\s+/g, ' ').trim();
+    if (!variant) return;
 
-  const parts = cleaned.split(/\s+/).filter(Boolean);
-  if (parts.length === 2) {
-    variants.add(`${parts[1]} ${parts[0]}`);
-  }
+    variants.add(variant);
+
+    const parts = variant.split(/\s+/).filter(Boolean);
+    if (parts.length === 2) {
+      variants.add(`${parts[1]} ${parts[0]}`);
+    }
+  };
+
+  addVariant(cleaned);
+  addVariant(cleaned.replace(/\s*\([^)]*\)\s*/g, ' '));
 
   return variants;
 }

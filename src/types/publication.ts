@@ -29,6 +29,8 @@ export interface Publication {
   pages?: string;
   year: number;
   month?: string;
+  acceptedDate?: string;
+  sortDate?: string;
   publishedDate?: string;
   doi?: string;
   arxivId?: string;
@@ -43,6 +45,8 @@ export interface Publication {
   citations?: number;
   impactFactor?: number;
   quartile?: 'Q1' | 'Q2' | 'Q3' | 'Q4';
+  sci?: string;
+  sciif?: string;
   bibtex?: string;
   venue?: string;
   location?: string;

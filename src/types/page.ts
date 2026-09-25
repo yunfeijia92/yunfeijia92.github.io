@@ -1,5 +1,5 @@
 export interface BasePageConfig {
-    type: 'about' | 'publication' | 'card' | 'text';
+    type: 'about' | 'publication' | 'card' | 'text' | 'pdf';
     title: string;
     description?: string;
 }
@@ -9,12 +9,26 @@ export interface PublicationPageConfig extends BasePageConfig {
     source: string;
 }
 
+export interface ScholarMetrics {
+    citations: number;
+    hIndex: number;
+    sourceUrl?: string;
+    fetchedAt?: string;
+}
+
 export interface TextPageConfig extends BasePageConfig {
     type: 'text';
     source: string;
 }
 
+export interface PdfPageConfig extends BasePageConfig {
+    type: 'pdf';
+    source: string;
+    hide_title?: boolean;
+}
+
 export interface CardItem {
+    id?: string;
     title: string;
     subtitle?: string;
     date?: string;
@@ -22,9 +36,12 @@ export interface CardItem {
     tags?: string[];
     link?: string;
     image?: string;
+    section?: string;
 }
 
 export interface CardPageConfig extends BasePageConfig {
     type: 'card';
+    layout?: 'card' | 'list';
+    hide_title?: boolean;
     items: CardItem[];
 }

@@ -42,8 +42,21 @@ function readFirstAvailableFile(filename: string, locale?: string): string {
   return '';
 }
 
+function getPublicationCount(locale?: string): number {
+  const bibtexContent = readFirstAvailableFile('publications.bib', locale);
+  return Array.from(bibtexContent.matchAll(/^\s*@\w+\s*\{/gm)).length;
+}
+
+function replaceContentPlaceholders(content: string, locale?: string): string {
+  if (!content.includes('{{PUBLICATION_COUNT}}')) {
+    return content;
+  }
+
+  return content.replaceAll('{{PUBLICATION_COUNT}}', String(getPublicationCount(locale)));
+}
+
 export function getMarkdownContent(filename: string, locale?: string): string {
-  return readFirstAvailableFile(filename, locale);
+  return replaceContentPlaceholders(readFirstAvailableFile(filename, locale), locale);
 }
 
 export function getBibtexContent(filename: string, locale?: string): string {

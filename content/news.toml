@@ -1,7 +1,39 @@
 [[news]]
-date = "2025-11"
-content = "Our work has been accepted by a prestigious journal 🎉"
+date = "2026-09"
+tag = "Paper"
+content = "Our review article on thirdhand tobacco smoke was published in [*ACS ES&T Air*](https://doi.org/10.1021/acsestair.5c00143)."
 
 [[news]]
-date = "2025-09"
-content = "Starting my PhD at the University of Example"
+date = "2026-07"
+tag = "Career"
+content = "Joined the NIH-funded project *Air Pollutant Transformation of Indoor Allergens*, co-led by [Dr. Jenna Ditto](https://engineering.washu.edu/faculty/Jenna-Ditto.html) and [Dr. Andrew Kau](https://physicians.wustl.edu/people/andrew-l-kau-md/) at the WashU School of Medicine ."
+
+[[news]]
+date = "2026-07"
+tag = "Award"
+content = "Received a travel grant to attend [*American Association for Aerosol Research (AAAR)*](https://www.aaar.org/) 44th Annual Conference."
+
+[[news]]
+date = "2025-12"
+tag = "Career"
+content = "Completed all PhD coursework with straight As."
+
+[[news]]
+date = "2025-08"
+tag = "Service"
+content = "Served as the Junior Board Member of the [*Center for Aerosol Science and Engineering (CASE)*](https://aerosols.washu.edu/)."
+
+[[news]]
+date = "2025-05"
+tag = "Career"
+content = "Passed the PhD qualifying exam.🎉"
+
+[[news]]
+date = "2024-08"
+tag = "Award"
+content = "Received the *Departmental Outstanding Scholar Award*."
+
+[[news]]
+date = "2024-08"
+tag = "Career"
+content = "Started PhD study at Washington University in St. Louis!🎉"

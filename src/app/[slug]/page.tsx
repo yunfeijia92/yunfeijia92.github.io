@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getPageConfig, getMarkdownContent, getBibtexContent } from '@/lib/content';
 import { getConfig } from '@/lib/config';
+import { getGoogleScholarMetrics } from '@/lib/googleScholar';
 import { parseBibTeX } from '@/lib/bibtexParser';
 import DynamicPageClient, { type DynamicPageLocaleData } from '@/components/pages/DynamicPageClient';
 import {
@@ -8,12 +9,13 @@ import {
   PublicationPageConfig,
   TextPageConfig,
   CardPageConfig,
+  PdfPageConfig,
 } from '@/types/page';
 
 import { Metadata } from 'next';
 import { getRuntimeI18nConfig } from '@/lib/i18n/config';
 
-function loadDynamicPageData(slug: string, locale?: string): DynamicPageLocaleData | null {
+async function loadDynamicPageData(slug: string, locale?: string): Promise<DynamicPageLocaleData | null> {
   const pageConfig = getPageConfig(slug, locale) as BasePageConfig | null;
 
   if (!pageConfig) {
@@ -22,11 +24,16 @@ function loadDynamicPageData(slug: string, locale?: string): DynamicPageLocaleDa
 
   if (pageConfig.type === 'publication') {
     const pubConfig = pageConfig as PublicationPageConfig;
+    const siteConfig = getConfig(locale);
     const bibtex = getBibtexContent(pubConfig.source, locale);
+    const googleScholarUrl = siteConfig.social.google_scholar;
+
     return {
       type: 'publication',
       config: pubConfig,
       publications: parseBibTeX(bibtex, locale),
+      scholarMetrics: await getGoogleScholarMetrics(googleScholarUrl),
+      googleScholarUrl,
     };
   }
 
@@ -44,6 +51,13 @@ function loadDynamicPageData(slug: string, locale?: string): DynamicPageLocaleDa
     return {
       type: 'card',
       config: pageConfig as CardPageConfig,
+    };
+  }
+
+  if (pageConfig.type === 'pdf') {
+    return {
+      type: 'pdf',
+      config: pageConfig as PdfPageConfig,
     };
   }
 
@@ -83,15 +97,17 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
   const dataByLocale: Record<string, DynamicPageLocaleData> = {};
 
   for (const locale of targetLocales) {
-    const localizedData = loadDynamicPageData(slug, locale);
+    const localizedData = await loadDynamicPageData(slug, locale);
     if (localizedData) {
       dataByLocale[locale] = localizedData;
     }
   }
 
-  const defaultData = loadDynamicPageData(slug);
-  if (defaultData) {
-    dataByLocale[runtimeI18n.defaultLocale] = dataByLocale[runtimeI18n.defaultLocale] || defaultData;
+  if (!dataByLocale[runtimeI18n.defaultLocale]) {
+    const defaultData = await loadDynamicPageData(slug);
+    if (defaultData) {
+      dataByLocale[runtimeI18n.defaultLocale] = defaultData;
+    }
   }
 
   if (Object.keys(dataByLocale).length === 0) {

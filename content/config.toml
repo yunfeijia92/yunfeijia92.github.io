@@ -1,55 +1,46 @@
 [site]
-title = "Jiale Liu"
-description = "PhD student at the University of Example."
-favicon = "/favicon.svg"
-last_updated = "November 18, 2025"
+title = "Yunfei Jia"
+description = "Personal academic homepage of Yunfei Jia, PhD student at Washington University."
+favicon = "/YJ.png"
+last_updated = "September 24, 2026"
 
 [author]
-name = "Jiale Liu"
-title = "PhD Student"
-institution = "University of Example"
-avatar = "/bio.jpg"
+name = "Yunfei Jia"
+title = "Ph.D. student"
+institution = "Washington University in St. Louis"
+avatar = "/YJ_profile.png"
 
 [social]
-# Contact information (leave blank or delete to hide)
-
-email = "john.doe@example.com"
-location = "City, Country"
-location_url = "https://maps.google.com"
+email = "j.yunfei@wustl.edu"
+location_url = "https://www.google.com/maps/place/Stephen+F.+and+Camilla+T.+Brauer+Hall/@38.6484222,-90.3027024,19z/data=!4m6!3m5!1s0x87d8caabb6a7a169:0xb12fbed88b02321c!8m2!3d38.6489089!4d-90.3021483!16s%2Fg%2F124sz676b?entry=ttu&g_ep=EgoyMDI2MDcyOC4wIKXMDSoASAFQAw%3D%3D"
 location_details = [
-  "Room 123, Science Building,",
-  "University Avenue, City, Country"
+  "Room 3011, Brauer Hall",
+  "1 Brookings Drive,",
+  "St. Louis, MO 63130, United States"
 ]
-google_scholar = "https://scholar.google.com"
-orcid = "https://orcid.org"
-github = "https://github.com"
-linkedin = "https://linkedin.com"
+google_scholar = "https://scholar.google.com/citations?user=4J-02cIAAAAJ&hl=en"
+orcid = "https://orcid.org/0000-0001-7236-1217"
+linkedin = "https://www.linkedin.com/in/yunfei-jia-265543329/"
 
 [features]
-# Show a like button on the about page
-enable_likes = true
-
-# Display all subpages on a single page
+enable_likes = false
 enable_one_page_mode = false
 
 [i18n]
 enabled = true
-locales = ["zh", "en"]
+locales = ["en", "zh"]
 default_locale = "en"
-# "auto" means the locale will be determined by the browser's language setting, "fixed" means the locale will be fixed to the default locale (but can be switched still, if you want to disable, set "enable=false")
 mode = "auto"
 fixed_locale = "en"
-# If true, PRISM will remember user's language preference in browser's localStorage
 persist = true
-# Show a language switcher on the top right corner
 switcher = true
 
 [i18n.labels]
-zh = "中文"
 en = "English"
+zh = "中文"
 
 [[navigation]]
-title = "About"
+title = "Home"
 type = "page"
 target = "about"
 href = "/"
@@ -60,26 +51,20 @@ type = "page"
 target = "publications"
 href = "/publications"
 
-[[navigation]]
-title = "Teaching"
-type = "page"
-target = "teaching"
-href = "/teaching"
+#[[navigation]]
+#title = "Awards"
+#type = "page"
+#target = "awards"
+#href = "/awards"
 
 [[navigation]]
-title = "Awards"
-type = "page"
-target = "awards"
-href = "/awards"
-
-[[navigation]]
-title = "Services"
+title = "Service"
 type = "page"
 target = "services"
 href = "/services"
 
-[[navigation]]
-title = "CV"
-type = "page"
-target = "cv"
-href = "/cv"
+#[[navigation]]
+#title = "CV"
+#type = "page"
+#target = "cv"
+#href = "/cv"

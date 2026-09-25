@@ -1,5 +1,3 @@
-我目前是某某大学理学院博士生，导师是 [导师甲教授](https://example.com) 和 [导师乙博士](https://example.com)。
+目前博士就读于圣路易斯华盛顿大学环境与化学工程系，导师为[**Jenna C. Ditto教授**](https://engineering.washu.edu/faculty/Jenna-Ditto.html)。于2020年毕业于同济大学，获供热、供燃气、通风及空调工程专业工学硕士学位，师从[**周伟国教授**](https://auto.tongji.edu.cn/szdw/szdw/aszm.htm)；于2015年毕业于上海电力学院（现上海电力大学），获热能与动力工程专业（卓越培养计划）工学学士学位。此前，曾历任华能国际莱州发电有限公司工程师，申能集团管培生，上海燃气浦东销售有限公司经理助理、副经理。
 
-此前，我在某某大学获得自然科学学士学位（一等荣誉）。
-
-我的研究主要关注自然哲学中的数学原理。
+主要研究方向为人员室内活动而引起的室内空气品质变化及人员室内暴露与健康影响，特别是质谱表征室内挥发性/半挥发性有机物的化学演变与空间传播。目前在研项目包括三手烟（尼古丁及烟草特异性亚硝胺）的室内的留存，传播及化学演变，纺织物引起的气相有机物的释放及其跨空间传播特性，以及室内尘螨中致敏原的成分演变对呼吸道过敏的机理研究。目前共累计发表学术论文 *{{PUBLICATION_COUNT}} 篇* [![Google Scholar 引用](https://img.shields.io/endpoint?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fzhechen06%2Fzhechen06.github.io%40google-scholar-stats%2Fgs_data_shieldsio.json&label=%E5%BC%95%E7%94%A8&style=flat&labelColor=f6f6f6)](https://scholar.google.com/citations?user=2qgIJwwAAAAJ&hl=zh-CN)，含一作论文*2篇*。

@@ -125,13 +125,13 @@ export default function Profile({ author, social, features, researchInterests }:
 
             {/* Name and Title */}
             <div className="text-center mb-6">
-                <h1 className="text-3xl font-serif font-bold text-primary mb-2">
+                <h1 className="text-3xl font-serif font-bold text-ui-heading mb-2">
                     {author.name}
                 </h1>
-                <p className="text-lg text-accent font-medium mb-1">
+                <p className="text-lg text-ui-accent font-medium mb-1">
                     {author.title}
                 </p>
-                <p className="text-neutral-600 mb-2">
+                <p className="text-ui-muted mb-2 whitespace-pre-line">
                     {author.institution}
                 </p>
             </div>
@@ -154,16 +154,20 @@ export default function Profile({ author, social, features, researchInterests }:
                                         setShowAddress(!isAddressPinned);
                                         setLastClickedTooltip('address');
                                     }}
-                                    className={`p-2 sm:p-2 transition-colors duration-200 ${isAddressPinned
-                                        ? 'text-accent'
-                                        : 'text-neutral-600 dark:text-neutral-400 hover:text-accent'
+                                    className={`academic-social-icon p-2 sm:p-2 transition-colors duration-200 ${isAddressPinned
+                                        ? 'text-ui-accent'
+                                        : 'text-ui-muted hover:text-ui-accent'
                                         }`}
                                     aria-label={link.name}
                                 >
                                     {isAddressPinned ? (
-                                        <MapPinSolidIcon className="h-5 w-5" />
+                                        <span className="academic-social-icon-inner">
+                                            <MapPinSolidIcon className="h-5 w-5" />
+                                        </span>
                                     ) : (
-                                        <MapPinIcon className="h-5 w-5" />
+                                        <span className="academic-social-icon-inner">
+                                            <MapPinIcon className="h-5 w-5" />
+                                        </span>
                                     )}
                                 </button>
 
@@ -186,7 +190,7 @@ export default function Profile({ author, social, features, researchInterests }:
                                                 <div className="flex items-center justify-center space-x-2 mb-1">
                                                     <p className="font-semibold">{messages.profile.workAddress}</p>
                                                     {!isAddressPinned && (
-                                                        <div className="flex items-center space-x-0.5 text-xs text-neutral-400 opacity-60">
+                                                        <div className="flex items-center space-x-0.5 text-xs text-ui-muted opacity-60">
                                                             <Pin className="h-2.5 w-2.5" />
                                                             <span className="hidden sm:inline">{messages.profile.click}</span>
                                                         </div>
@@ -231,16 +235,20 @@ export default function Profile({ author, social, features, researchInterests }:
                                         setShowEmail(!isEmailPinned);
                                         setLastClickedTooltip('email');
                                     }}
-                                    className={`p-2 sm:p-2 transition-colors duration-200 ${isEmailPinned
-                                        ? 'text-accent'
-                                        : 'text-neutral-600 dark:text-neutral-400 hover:text-accent'
+                                    className={`academic-social-icon p-2 sm:p-2 transition-colors duration-200 ${isEmailPinned
+                                        ? 'text-ui-accent'
+                                        : 'text-ui-muted hover:text-ui-accent'
                                         }`}
                                     aria-label={link.name}
                                 >
                                     {isEmailPinned ? (
-                                        <EnvelopeSolidIcon className="h-5 w-5" />
+                                        <span className="academic-social-icon-inner">
+                                            <EnvelopeSolidIcon className="h-5 w-5" />
+                                        </span>
                                     ) : (
-                                        <EnvelopeIcon className="h-5 w-5" />
+                                        <span className="academic-social-icon-inner">
+                                            <EnvelopeIcon className="h-5 w-5" />
+                                        </span>
                                     )}
                                 </button>
 
@@ -263,7 +271,7 @@ export default function Profile({ author, social, features, researchInterests }:
                                                 <div className="flex items-center justify-center space-x-2 mb-1">
                                                     <p className="font-semibold">{messages.profile.email}</p>
                                                     {!isEmailPinned && (
-                                                        <div className="flex items-center space-x-0.5 text-xs text-neutral-400 opacity-60">
+                                                        <div className="flex items-center space-x-0.5 text-xs text-ui-muted opacity-60">
                                                             <Pin className="h-2.5 w-2.5" />
                                                             <span className="hidden sm:inline">{messages.profile.click}</span>
                                                         </div>
@@ -294,10 +302,12 @@ export default function Profile({ author, social, features, researchInterests }:
                             href={link.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 sm:p-2 text-neutral-600 dark:text-neutral-400 hover:text-accent transition-colors duration-200"
+                            className="academic-social-icon p-2 sm:p-2 text-ui-muted hover:text-ui-accent transition-colors duration-200"
                             aria-label={link.name}
                         >
-                            <IconComponent className="h-5 w-5" />
+                            <span className="academic-social-icon-inner">
+                                <IconComponent className="h-5 w-5" />
+                            </span>
                         </a>
                     );
                 })}
@@ -305,9 +315,9 @@ export default function Profile({ author, social, features, researchInterests }:
 
             {/* Research Interests */}
             {researchInterests && researchInterests.length > 0 && (
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-4 mb-6 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]">
-                    <h3 className="font-semibold text-primary mb-3">{messages.profile.researchInterests}</h3>
-                    <div className="space-y-2 text-sm text-neutral-700 dark:text-neutral-500">
+                <div className="frosted-surface bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4 mb-6 shadow-sm border border-neutral-200 dark:border-[rgba(148,163,184,0.24)] hover:shadow-lg transition-all duration-200 hover:scale-[1.02]">
+                    <h3 className="font-semibold text-ui-heading mb-3">{messages.profile.researchInterests}</h3>
+                    <div className="space-y-2 text-base leading-relaxed text-ui-body">
                         {researchInterests.map((interest, index) => (
                             <div key={index}>{interest}</div>
                         ))}
@@ -325,7 +335,7 @@ export default function Profile({ author, social, features, researchInterests }:
                             whileTap={{ scale: 0.95 }}
                             className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${hasLiked
                                 ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
-                                : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 cursor-pointer'
+                                : 'bg-neutral-100 dark:bg-neutral-800 text-ui-body hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 cursor-pointer'
                                 }`}
                         >
                             {hasLiked ? (

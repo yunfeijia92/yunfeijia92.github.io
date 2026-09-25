@@ -6,8 +6,9 @@ This guide is designed for beginners. You don't need complex configurations to d
 
 1.  **Build your project**
     
-    First, ensure you have the correct Node.js version installed.
+    First, ensure you have a supported Node.js version installed.
     *   **Download & Install**: Go to [https://nodejs.org/en/download](https://nodejs.org/en/download) and install Node.js manually.
+    *   Use Node.js 22, 23, 24, or 25. Node.js 22 is recommended because the GitHub Actions workflow uses Node.js 22.
     *   Better not to use the system's default Node.js as it might be outdated.
 
     Open your terminal in the project folder and run:
@@ -52,29 +53,20 @@ This method is recommended if you want your site to update automatically wheneve
 
 #### How to enable
 
-This repository includes an optional workflow located at:
+This repository includes a GitHub Actions workflow located at:
 
 ```
 .github/workflows/deploy.yml
 ```
 
-For template users, GitHub disables workflows by default.  
-To enable deployment:
+The workflow currently runs automatically when changes are pushed to the `main` branch, and it can also be started manually from the Actions tab.
+
+To use GitHub Actions deployment:
 
 1. Go to **Settings > Pages**, and under **Build and deployment > Source**, choose **GitHub Actions**.
 2. Go to **Actions** Tab, and select **"Deploy PRISM to GitHub Pages"**.
-3. Click **"Enable workflow"**.
-4. Run manually using **Run workflow**.
-5. (Optional) To enable automatic deployment on push:  
-   Edit `.github/workflows/deploy.yml` and uncomment:
-
-   ```yaml
-   on:
-     push:
-       branches:
-         - main
-         - ci
-   ```
+3. If GitHub asks you to enable workflows, click **"Enable workflow"**.
+4. Push changes to the `main` branch, or run the workflow manually using **Run workflow**.
 
 Once enabled, GitHub Actions will:
 
