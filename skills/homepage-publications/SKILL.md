@@ -1,6 +1,6 @@
 ---
 name: homepage-publications
-description: "Maintain homepage publication metadata. Use when adding or editing papers in content/publications.bib, preparing or verifying entries from Zotero by title/DOI, checking DOI/title duplicates, adding journal covers under public/papers, updating SCI quartiles or impact factors with EasyScholar, syncing new or changed publications into CV sources, or updating Google Scholar statistics."
+description: "Maintain homepage publication metadata. Use when adding or editing papers in content/publications.bib, preparing or verifying entries from Zotero by title/DOI, checking DOI/title duplicates, adding journal covers under public/papers, updating SCI quartiles or impact factors with EasyScholar, or updating Google Scholar statistics."
 ---
 
 # Homepage Publications
@@ -17,7 +17,6 @@ Use this skill for publication-facing maintenance on the personal homepage. Trea
 - Inspect `public/papers/` before choosing a `preview` filename; reuse an existing journal cover for the same journal unless there is a specific reason not to.
 - Use `uv` for Python commands and never print, echo, or commit secrets such as `EASY_SCHOLAR_SECRET_KEY`.
 - Use `accepted = {YYYY-MM-DD}` for acceptance dates. The publication page sorts Year mode by BibTeX `year` first, then by `accepted` within the same displayed year; visible tags still show the BibTeX `year`.
-- Decide whether the change is CV-visible. Titles, authors, corresponding-author markers, venue, year, DOI, status, `sciif`, and any change that affects CV ordering require CV inspection and usually PDF regeneration. Site-only fields such as `preview`, `description`, `keywords`, and `selected` do not require CV edits by themselves.
 - Do not modify the website when the user only asks for information to fill in later; return a ready-to-paste BibTeX block plus evidence instead.
 
 ## Work
@@ -26,7 +25,7 @@ Use this skill for publication-facing maintenance on the personal homepage. Trea
 
 - Start from BibTeX from Zotero, DOI/publisher pages, or Crossref. For a new publication or a major metadata refresh, prefer Zotero first when it has a matching item and local PDF evidence.
 - Add or update the entry in `content/publications.bib`.
-- When updating an existing entry, preserve curated site-specific fields unless the evidence says they should change. Compare any CV-visible metadata with both CV TeX files before deciding that no CV work is needed.
+- When updating an existing entry, preserve curated site-specific fields unless the evidence says they should change.
 - Fill the site-specific fields:
   - `preview`: filename only, matching a real file under `public/papers/`
   - `sci`: SCI quartile, such as `Q1`; empty is valid when the source returns empty
@@ -131,15 +130,6 @@ uv run python google_scholar_crawler/main.py
 
 ## Verify
 
-- After adding or editing article entries, run:
-
-```bash
-npm run cv:publication-sync-check
-```
-
-- If the sync check reports missing CV entries, add the printed `\item` drafts to the journal-paper sections of both CV TeX files, preserve CV-specific notes, and order journal papers using the role-group and descending-IF rule in `skills/homepage-cv/SKILL.md`, then regenerate the PDFs with that skill.
-- The sync check mainly catches missing CV entries. If an existing publication's CV-visible metadata or ordering fields changed, inspect both CV TeX files directly, update the existing entries, reorder when needed, and regenerate both PDFs with `skills/homepage-cv/SKILL.md`.
-- If only site-only fields changed and the CV was intentionally not regenerated, state that explicitly in the final response.
 - Confirm every referenced `preview` file exists under `public/papers/`.
 - Run the content integrity check:
 
@@ -152,5 +142,5 @@ npm run content:check
 
 ## Finish
 
-- Summarize the publication entries changed, evidence used for any corresponding-author markers, assets added or reused, CV sync outcome, verification commands run, and whether the deployment/static-export build was intentionally skipped or run.
+- Summarize the publication entries changed, evidence used for any corresponding-author markers, assets added or reused, verification commands run, and whether the deployment/static-export build was intentionally skipped or run.
 - Mention any skipped translation, missing cover, unavailable Zotero item, or EasyScholar empty value explicitly.

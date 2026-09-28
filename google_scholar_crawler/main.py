@@ -19,7 +19,7 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "content" / "config.toml"
 OUTPUT_DIR = ROOT / "google-scholar-stats"
-DEFAULT_REPOSITORY = "zhechen06/zhechen06.github.io"
+DEFAULT_REPOSITORY = "yunfeijia92/PRISM"
 FETCH_ATTEMPTS = int(os.environ.get("SCHOLAR_FETCH_ATTEMPTS", "3"))
 FETCH_TIMEOUT_SECONDS = float(os.environ.get("SCHOLAR_FETCH_TIMEOUT_SECONDS", "12"))
 FREE_PROXY_TIMEOUT_SECONDS = float(os.environ.get("SCHOLAR_FREE_PROXY_TIMEOUT_SECONDS", "35"))

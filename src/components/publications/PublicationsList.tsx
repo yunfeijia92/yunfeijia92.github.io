@@ -38,7 +38,8 @@ const validAuthorshipFilters: AuthorshipFilter[] = ['first-author', 'correspondi
 const validQuartileFilters: QuartileFilter[] = ['Q1', 'Q2', 'Q3', 'Q4'];
 const validImpactFactorFilters: ImpactFactorFilter[] = ['lt-5', '5-10', 'gt-10'];
 
-const googleScholarStatsUrl = 'https://cdn.jsdelivr.net/gh/zhechen06/zhechen06.github.io@google-scholar-stats/gs_data.json';
+const googleScholarStatsUrl =
+  'https://cdn.jsdelivr.net/gh/yunfeijia92/PRISM@google-scholar-stats/gs_data.json';
 
 const passiveTagClass = "inline-flex max-w-full items-center rounded-md border border-transparent bg-neutral-100 px-3 py-1 text-left text-xs font-medium leading-snug text-ui-body dark:border-white/15 dark:bg-white/15 dark:text-slate-50";
 
@@ -303,9 +304,7 @@ export default function PublicationsList({
     }, [publications]);
 
     const publicationStats = useMemo(() => {
-        const journalPublications = publications.filter(pub => pub.type === 'journal');
-
-        return journalPublications.reduce(
+        return publications.reduce(
             (stats, pub) => {
                 const authorshipCategory = getMyAuthorshipCategory(pub);
                 if (authorshipCategory === 'first-author') {
@@ -410,7 +409,6 @@ export default function PublicationsList({
     const scholarCardLabelClass = "flex items-center justify-start gap-1.5 text-sm font-medium leading-snug text-ui-muted";
 
     const firstAuthorCardActive = selectedAuthorships.includes('first-author');
-    const correspondingAuthorCardActive = selectedAuthorships.includes('corresponding-author');
     const coAuthorCardActive = selectedAuthorships.includes('co-author');
     const allPublicationsCardActive = selectedAuthorships.length === 0;
 
@@ -425,7 +423,7 @@ export default function PublicationsList({
                     <h1 className={`${embedded ? "text-2xl" : "text-4xl"} font-serif font-bold text-ui-heading`}>{config.title}</h1>
                 </div>
                 {!embedded && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                         <button
                             type="button"
                             onClick={() => setSelectedAuthorships([])}
@@ -444,15 +442,7 @@ export default function PublicationsList({
                             <div className={getAuthorshipCardNumberClass(firstAuthorCardActive)}>{publicationStats.firstAuthor}</div>
                             <div className={getAuthorshipCardLabelClass(firstAuthorCardActive)}>{messages.publications.statCards.firstAuthor}</div>
                         </button>
-                        <button
-                            type="button"
-                            onClick={() => setAuthorshipQuickFilter('corresponding-author')}
-                            aria-pressed={correspondingAuthorCardActive}
-                            className={getAuthorshipCardClass(correspondingAuthorCardActive)}
-                        >
-                            <div className={getAuthorshipCardNumberClass(correspondingAuthorCardActive)}>{publicationStats.correspondingAuthor}</div>
-                            <div className={getAuthorshipCardLabelClass(correspondingAuthorCardActive)}>{messages.publications.statCards.correspondingAuthor}</div>
-                        </button>
+
                         <button
                             type="button"
                             onClick={() => setAuthorshipQuickFilter('co-author')}

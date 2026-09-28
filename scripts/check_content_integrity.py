@@ -18,10 +18,6 @@ CONTENT_DIR = ROOT / "content"
 CONTENT_ZH_DIR = ROOT / "content_zh"
 PUBLIC_DIR = ROOT / "public"
 PUBLICATION_BIB = CONTENT_DIR / "publications.bib"
-CV_PDFS = [
-    PUBLIC_DIR / "cv" / "CV-Zhe-Chen-English.pdf",
-    PUBLIC_DIR / "cv" / "CV-Zhe-Chen-Chinese.pdf",
-]
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
@@ -198,33 +194,12 @@ def check_publications(result: CheckResult) -> None:
             result.error(f"content/publications.bib:{entry.key} accepted must use YYYY-MM-DD, got `{accepted}`")
 
 
-def check_cv_pdfs(result: CheckResult) -> None:
-    try:
-        from pypdf import PdfReader
-    except ImportError:
-        result.warning("pypdf is unavailable; skipped CV PDF outline checks")
-        return
-
-    for pdf_path in CV_PDFS:
-        if not pdf_path.exists():
-            result.error(f"{pdf_path.relative_to(ROOT)}: missing CV PDF")
-            continue
-        try:
-            reader = PdfReader(str(pdf_path))
-            if len(reader.pages) == 0:
-                result.error(f"{pdf_path.relative_to(ROOT)}: PDF has no pages")
-            if len(reader.outline) == 0:
-                result.error(f"{pdf_path.relative_to(ROOT)}: PDF outline is missing")
-        except Exception as exc:
-            result.error(f"{pdf_path.relative_to(ROOT)}: PDF check failed: {exc}")
-
 
 def main() -> int:
     result = CheckResult(errors=[], warnings=[])
     check_bilingual_toml(result)
     check_toml_references(result)
     check_publications(result)
-    check_cv_pdfs(result)
 
     if result.warnings:
         print("Warnings:")

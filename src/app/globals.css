@@ -223,11 +223,11 @@ body::before {
   inset: -18%;
   z-index: -1;
   pointer-events: none;
-  background:
+background:
     radial-gradient(circle at 12% 22%, rgba(117, 166, 196, 0.72) 0%, transparent 60%),
-    radial-gradient(circle at 78% 74%, rgba(188, 174, 224, 0.62) 0%, transparent 58%),
-    radial-gradient(circle at 42% 8%, rgba(220, 178, 128, 0.5) 0%, transparent 40%),
-    radial-gradient(circle at 92% 38%, rgba(139, 184, 151, 0.56) 0%, transparent 44%);
+  radial-gradient(circle at 78% 74%, rgba(221, 172, 176, 0.384) 0%, transparent 58%),
+  radial-gradient(circle at 42% 8%, rgba(226, 178, 120, 0.46) 0%, transparent 45%);
+
   filter: blur(104px);
   opacity: 0.94;
   transform: translateZ(0);

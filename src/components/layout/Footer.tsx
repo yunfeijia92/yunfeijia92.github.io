@@ -10,7 +10,7 @@ interface FooterProps {
   authorName?: string;
 }
 
-const homepageRepositoryUrl = 'https://github.com/zhechen06/zhechen06.github.io';
+const homepageRepositoryUrl = 'https://github.com/yunfeijia92/PRISM';
 
 export default function Footer({ lastUpdated, lastUpdatedByLocale, defaultLocale = 'en', authorName }: FooterProps) {
   const locale = useLocaleStore((state) => state.locale);

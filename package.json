@@ -11,7 +11,6 @@
     "scholar:stats": "uv run python google_scholar_crawler/main.py",
     "publication:ranks": "uv run python scripts/update_publication_ranks.py",
     "publication:accepted-dates": "uv run python scripts/update_publication_accept_dates.py",
-    "cv:publication-sync-check": "uv run python scripts/check_cv_publication_sync.py",
     "content:check": "uv run --with pypdf python scripts/check_content_integrity.py",
     "start": "next start",
     "lint": "next lint"

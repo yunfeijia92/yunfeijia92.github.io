@@ -70,14 +70,14 @@ npm run dev
 - Check Pages configuration:
 
 ```bash
-gh api repos/zhechen06/zhechen06.github.io/pages --jq '{build_type,source,status,html_url}'
+gh api repos/yunfeijia92/PRISM/pages --jq '{build_type,source,status,html_url}'
 ```
 
 - Expected `build_type` is `workflow`.
 - If it shows `legacy`, or the public page renders the root `README.md` through Jekyll, switch Pages to GitHub Actions:
 
 ```bash
-gh api --method PUT repos/zhechen06/zhechen06.github.io/pages \
+gh api --method PUT repos/yunfeijia92/PRISM/pages \
   -H 'X-GitHub-Api-Version: 2022-11-28' \
   -f build_type=workflow
 gh workflow run deploy.yml --ref main
@@ -119,9 +119,9 @@ git diff --stat origin/main HEAD --
 ```bash
 git branch --show-current
 git ls-remote --heads origin
-gh api repos/zhechen06/zhechen06.github.io/deployments --paginate \
+gh api repos/yunfeijia92/PRISM/deployments --paginate \
   --jq '[.[] | {id, sha, environment, created_at}]'
-gh api repos/zhechen06/zhechen06.github.io/actions/runs --paginate \
+gh api repos/yunfeijia92/PRISM/actions/runs --paginate \
   --jq '[.workflow_runs[] | {id, name, status, conclusion, head_sha, created_at}]'
 ```
 
@@ -143,30 +143,30 @@ git push --force-with-lease origin main:main
 5. Wait for the push-triggered deploy workflow for the new commit to succeed:
 
 ```bash
-gh run list --repo zhechen06/zhechen06.github.io --limit 8 \
+gh run list --repo yunfeijia92/PRISM --limit 8 \
   --json databaseId,name,workflowName,event,status,conclusion,headBranch,headSha
-gh run watch RUN_ID --repo zhechen06/zhechen06.github.io --interval 5 --exit-status
+gh run watch RUN_ID --repo yunfeijia92/PRISM --interval 5 --exit-status
 ```
 
 6. Remove old deployment records only after the new deployment exists. Keep records whose `sha` equals the new commit, and delete all others by first marking them inactive:
 
 ```bash
-for id in $(gh api repos/zhechen06/zhechen06.github.io/deployments --paginate \
+for id in $(gh api repos/yunfeijia92/PRISM/deployments --paginate \
   --jq ".[] | select(.sha != \"$new_commit\") | .id"); do
-  gh api -X POST "repos/zhechen06/zhechen06.github.io/deployments/${id}/statuses" \
+  gh api -X POST "repos/yunfeijia92/PRISM/deployments/${id}/statuses" \
     -f state=inactive \
     -f description='Clean old deployment history' \
     -F auto_inactive=false >/dev/null
-  gh api -X DELETE "repos/zhechen06/zhechen06.github.io/deployments/${id}" >/dev/null
+  gh api -X DELETE "repos/yunfeijia92/PRISM/deployments/${id}" >/dev/null
 done
 ```
 
 7. Delete old GitHub Actions workflow runs only after the new deployment succeeds. Keep runs whose `head_sha` equals the new commit, and delete all others:
 
 ```bash
-for id in $(gh api repos/zhechen06/zhechen06.github.io/actions/runs --paginate \
+for id in $(gh api repos/yunfeijia92/PRISM/actions/runs --paginate \
   --jq ".workflow_runs[] | select(.head_sha != \"$new_commit\") | .id"); do
-  gh api -X DELETE "repos/zhechen06/zhechen06.github.io/actions/runs/${id}" >/dev/null
+  gh api -X DELETE "repos/yunfeijia92/PRISM/actions/runs/${id}" >/dev/null
 done
 ```
 
@@ -176,11 +176,11 @@ done
 git fetch --prune origin
 git rev-list --count origin/main
 git log --oneline --decorate --max-count=5 origin/main
-gh api repos/zhechen06/zhechen06.github.io/deployments --paginate \
+gh api repos/yunfeijia92/PRISM/deployments --paginate \
   --jq '[.[] | {id, sha, environment, created_at}]'
-gh api repos/zhechen06/zhechen06.github.io/actions/runs --paginate \
+gh api repos/yunfeijia92/PRISM/actions/runs --paginate \
   --jq '[.workflow_runs[] | {id, name, status, conclusion, head_sha, created_at}]'
-curl -I -L --max-time 20 https://zhechen06.github.io/
+curl -I -L --max-time 20 https://yunfeijia92.github.io/PRISM/
 ```
 
 - Expected result: `origin/main` has one commit, the commit message is `Initial commit`, deployments contains only the new deployment for that commit, workflow runs contain only runs for the new commit, and the live site returns HTTP 200.
@@ -200,7 +200,7 @@ git status --short
 - After deployment, confirm the live site is the exported Next.js site:
 
 ```bash
-curl -L https://zhechen06.github.io/ | head
+curl -L https://yunfeijia92.github.io/PRISM/ | head
 ```
 
 - The HTML should include Next.js assets such as `/_next/static/`; it should not include Jekyll-rendered README output.

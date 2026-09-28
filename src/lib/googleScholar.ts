@@ -4,7 +4,7 @@ import path from 'node:path';
 import type { ScholarMetrics } from '@/types/page';
 
 export const GOOGLE_SCHOLAR_STATS_URL =
-  'https://cdn.jsdelivr.net/gh/zhechen06/zhechen06.github.io@google-scholar-stats/gs_data.json';
+  'https://cdn.jsdelivr.net/gh/yunfeijia92/PRISM@google-scholar-stats/gs_data.json';
 
 const metricsCache = new Map<string, Promise<ScholarMetrics | null>>();
 
