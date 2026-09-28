@@ -19,6 +19,7 @@ import { PublicationPageConfig, ScholarMetrics } from '@/types/page';
 import { cn } from '@/lib/utils';
 import { useMessages } from '@/lib/i18n/useMessages';
 import FormattedBibTeXText from './FormattedBibTeXText';
+import { withBasePath } from '@/lib/utils';
 
 interface PublicationsListProps {
     config: PublicationPageConfig;
@@ -780,7 +781,7 @@ export default function PublicationsList({
                                     <div className="w-full max-w-[10rem] mx-auto md:mx-0 md:w-[10rem] flex-shrink-0">
                                         <div className="aspect-[3/2] relative rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
                                             <Image
-                                                src={`/papers/${pub.preview}`}
+                                                src={withBasePath(`/papers/${pub.preview}`)}
                                                 alt={pub.title}
                                                 fill
                                                 className="object-contain"
