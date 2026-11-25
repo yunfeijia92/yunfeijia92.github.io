@@ -57,6 +57,9 @@ function getTagClassName(tag?: string): string {
         case 'Career':
         case '历程':
             return 'text-emerald-700 dark:text-emerald-300';
+        case 'Outreach':
+        case '科普':
+            return 'text-[#A65D67] dark:text-[#E0A5AF]';
         default:
             return 'text-ui-muted';
     }
