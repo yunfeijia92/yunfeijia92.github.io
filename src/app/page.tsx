@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getConfig } from '@/lib/config';
 import { getMarkdownContent, getBibtexContent, getTomlContent, getPageConfig } from '@/lib/content';
 import { parseBibTeX } from '@/lib/bibtexParser';
@@ -5,6 +6,12 @@ import HomePageClient, { type HomePageLocaleData } from '@/components/home/HomeP
 import { Publication } from '@/types/publication';
 import { BasePageConfig, PublicationPageConfig, TextPageConfig, CardPageConfig, PdfPageConfig } from '@/types/page';
 import { getRuntimeI18nConfig } from '@/lib/i18n/config';
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+};
 
 interface SectionConfig {
   id: string;
@@ -192,6 +199,34 @@ function loadPageDataForLocale(locale: string | undefined): HomePageLocaleData {
 
 export default function Home() {
   const baseConfig = getConfig();
+
+  const siteUrl = 'https://yunfeijia92.github.io/';
+
+  const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${siteUrl}#person`,
+    name: baseConfig.author.name,
+    url: siteUrl,
+    image: new URL(baseConfig.author.avatar, siteUrl).href,
+    jobTitle: baseConfig.author.title,
+    affiliation: {
+      '@type': 'CollegeOrUniversity',
+      name: baseConfig.author.institution,
+      url: 'https://wustl.edu/',
+    },
+    knowsAbout: [
+      'Indoor Air Chemistry',
+      'Heterogeneous Chemistry',
+      'Human Exposure',
+    ],
+    sameAs: [
+      baseConfig.social.google_scholar,
+      baseConfig.social.orcid,
+      baseConfig.social.linkedin,
+    ].filter(Boolean),
+  };
+
   const runtimeI18n = getRuntimeI18nConfig(baseConfig.i18n);
   const targetLocales = runtimeI18n.enabled ? runtimeI18n.locales : [runtimeI18n.defaultLocale];
 
@@ -205,5 +240,18 @@ export default function Home() {
     dataByLocale[runtimeI18n.defaultLocale] = loadPageDataForLocale(undefined);
   }
 
-  return <HomePageClient dataByLocale={dataByLocale} defaultLocale={runtimeI18n.defaultLocale} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(personJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
+      <HomePageClient
+        dataByLocale={dataByLocale}
+        defaultLocale={runtimeI18n.defaultLocale}
+      />
+    </>
+  );
 }
