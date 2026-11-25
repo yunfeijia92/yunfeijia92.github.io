@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yunfeijia92.github.io/PRISM/sitemap.xml
+Sitemap: https://yunfeijia92.github.io/sitemap.xml
